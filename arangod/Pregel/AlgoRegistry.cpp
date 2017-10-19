@@ -34,6 +34,7 @@
 #include "Pregel/Algos/SLPA.h"
 #include "Pregel/Algos/SSSP.h"
 #include "Pregel/Algos/ShortestPath.h"
+#include "Pregel/Algos/SimpleTriangleClosing.h"
 #include "Pregel/Utils.h"
 
 using namespace arangodb;
@@ -67,6 +68,8 @@ IAlgorithm* AlgoRegistry::createAlgorithm(std::string const& algorithm,
     return new algos::SLPA(userParams);
   } else if (algorithm == "dmid") {
     return new algos::DMID(userParams);
+  } else if (algorithm == "simpletriangleclosing") {
+    return new algos::SimpleTriangleClosing(userParams);
   } else {
     THROW_ARANGO_EXCEPTION_MESSAGE(TRI_ERROR_BAD_PARAMETER,
                                    "Unsupported Algorithm");
@@ -96,6 +99,9 @@ IWorker* AlgoRegistry::createWorker(TRI_vocbase_t* vocbase, VPackSlice body) {
     return createWorker(vocbase, new algos::SSSPAlgorithm(userParams), body);
   } else if (algorithm == "pagerank") {
     return createWorker(vocbase, new algos::PageRank(userParams), body);
+  } else if (algorithm == "simpletriangleclosing") {
+    return createWorker(vocbase, new algos::SimpleTriangleClosing(userParams),
+        body);
   } else if (algorithm == "recoveringpagerank") {
     return createWorker(vocbase, new algos::RecoveringPageRank(userParams),
                         body);

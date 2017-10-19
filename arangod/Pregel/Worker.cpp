@@ -794,3 +794,4 @@ template class arangodb::pregel::Worker<ECValue, int8_t, HLLCounter>;
 template class arangodb::pregel::Worker<DMIDValue, float, DMIDMessage>;
 template class arangodb::pregel::Worker<LPValue, int8_t, uint64_t>;
 template class arangodb::pregel::Worker<SLPAValue, int8_t, uint64_t>;
+template class arangodb::pregel::Worker<std::string, int, std::vector<std::string> >;

@@ -267,3 +267,6 @@ template class arangodb::pregel::CombiningOutCache<DMIDMessage>;
 template class arangodb::pregel::OutCache<HLLCounter>;
 template class arangodb::pregel::ArrayOutCache<HLLCounter>;
 template class arangodb::pregel::CombiningOutCache<HLLCounter>;
+template class arangodb::pregel::OutCache< std::vector<std::string> >;
+template class arangodb::pregel::ArrayOutCache< std::vector<std::string> >;
+template class arangodb::pregel::CombiningOutCache< std::vector<std::string> >;

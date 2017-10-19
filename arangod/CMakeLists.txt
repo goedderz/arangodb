@@ -258,6 +258,7 @@ SET(ARANGOD_SOURCES
   Pregel/Algos/SSSP.cpp
   Pregel/Algos/SCC.cpp
   Pregel/Algos/SLPA.cpp
+  Pregel/Algos/SimpleTriangleClosing.cpp
   Pregel/Algos/LabelPropagation.cpp
   Pregel/Algos/DMID/DMID.cpp
   Pregel/Conductor.cpp

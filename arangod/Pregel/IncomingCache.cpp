@@ -348,3 +348,6 @@ template class arangodb::pregel::CombiningInCache<DMIDMessage>;
 template class arangodb::pregel::InCache<HLLCounter>;
 template class arangodb::pregel::ArrayInCache<HLLCounter>;
 template class arangodb::pregel::CombiningInCache<HLLCounter>;
+template class arangodb::pregel::InCache< std::vector<std::string> >;
+template class arangodb::pregel::ArrayInCache< std::vector<std::string> >;
+template class arangodb::pregel::CombiningInCache< std::vector<std::string> >;

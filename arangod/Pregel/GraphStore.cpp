@@ -616,4 +616,5 @@ template class arangodb::pregel::GraphStore<HITSValue, int8_t>;
 template class arangodb::pregel::GraphStore<DMIDValue, float>;
 template class arangodb::pregel::GraphStore<LPValue, int8_t>;
 template class arangodb::pregel::GraphStore<SLPAValue, int8_t>;
+template class arangodb::pregel::GraphStore<std::string, int>;
 

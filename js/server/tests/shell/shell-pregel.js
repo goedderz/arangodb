@@ -192,9 +192,103 @@ function exampleTestSuite () {
       }
     }
   };
+}
+function triangleClosingTestSuite () {
+  'use strict';
+  return {
+    
+    ////////////////////////////////////////////////////////////////////////////////
+    /// @brief set up
+    ////////////////////////////////////////////////////////////////////////////////
+
+    setUp : function () {
+
+      var exists = graph_module._list().indexOf("demo") !== -1;
+      if (exists || db.demo_v) {
+        return;
+      }
+      var graph = graph_module._create(graphName);
+      db._create(vColl, {numberOfShards: 4});
+      graph._addVertexCollection(vColl);
+      db._createEdgeCollection(eColl, {
+                               numberOfShards: 4,
+                               replicationFactor: 1,
+                               shardKeys:["vertex"],
+                               distributeShardsLike:vColl});
+
+      var rel = graph_module._relation(eColl, [vColl], [vColl]);
+      graph._extendEdgeDefinitions(rel);
+
+      var vertices = db[vColl];
+      var edges = db[eColl];
+
+
+      var A = vertices.insert({_key:'A'})._id;
+      var B = vertices.insert({_key:'B'})._id;
+      var C = vertices.insert({_key:'C'})._id;
+      var D = vertices.insert({_key:'D'})._id;
+      var E = vertices.insert({_key:'E'})._id;
+      var F = vertices.insert({_key:'F'})._id;
+      var G = vertices.insert({_key:'G'})._id;
+      var H = vertices.insert({_key:'H'})._id;
+
+      edges.insert({_from:A, _to:B, vertex:'A'});
+      edges.insert({_from:B, _to:A, vertex:'B'});
+
+      edges.insert({_from:B, _to:C, vertex:'B'});
+      edges.insert({_from:C, _to:B, vertex:'C'});
+
+      edges.insert({_from:C, _to:D, vertex:'C'});
+      edges.insert({_from:D, _to:C, vertex:'D'});
+
+      edges.insert({_from:C, _to:E, vertex:'C'});
+      edges.insert({_from:E, _to:C, vertex:'E'});
+
+      edges.insert({_from:D, _to:E, vertex:'D'});
+      edges.insert({_from:E, _to:D, vertex:'E'});
+
+      edges.insert({_from:E, _to:F, vertex:'E'});
+      edges.insert({_from:F, _to:E, vertex:'F'});
+
+      edges.insert({_from:E, _to:G, vertex:'E'});
+      edges.insert({_from:G, _to:E, vertex:'G'});
+
+      edges.insert({_from:F, _to:H, vertex:'F'});
+      edges.insert({_from:H, _to:F, vertex:'H'});
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////
+    /// @brief tear down
+    ////////////////////////////////////////////////////////////////////////////////
+
+    tearDown : function () {
+      graph_module._drop(graphName, true);
+    },
+
+    testTriangleClosing: function () {
+      var key = db._pregelStart("simpletriangleclosing", vColl, eColl, {});
+      var i = 10000;
+      do {
+        internal.wait(0.2);
+        var stats = db._pregelStatus(key);
+        if (stats.state !== "running") {
+          assertEqual(stats.vertexCount, 8, stats);
+          assertEqual(stats.edgeCount, 16, stats);
+
+          // TODO test results
+          assertEqual(db[vColl].document({_key: 'A'})._key, 'A');
+          break;
+        }
+      } while(i-- >= 0);
+      if (i === 0) {
+        assertTrue(false, "timeout in pregel execution");
+      }
+    },
+  };
 };
 
 jsunity.run(basicTestSuite);
 jsunity.run(exampleTestSuite);
+jsunity.run(triangleClosingTestSuite);
 
 return jsunity.done();
